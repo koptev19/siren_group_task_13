@@ -17,3 +17,27 @@ ALTER TABLE `stat_daily` ADD PRIMARY KEY (`hash`);<br>
 ALTER TABLE `stat_daily` ADD UNIQUE KEY `date_at` (`date_at`,`status_id`);
 
 
+# P.S.1
+<p>Решил добавить еще различные возможные варианты решения проблемы.
+<p>Первый вариант преобразовать sql-запрос. Не знаю, сработает или нет. Надо тестировать.
+<p>Надо сначала сделать подзапрос и уже запрос делать над результатом. Итог будет так:
+<pre>
+SELECT
+  DATE_FORMAT(CreatedTs, "%Y-%m-%d") `period`,
+  StatusId,
+  COUNT(idDeal) `count`
+FROM (
+    SELECT * 
+    FROM Deals 
+    WHERE CreatedTs BETWEEN "2021-01-01 00:00:00" AND "2021-01-31 23:59:59"
+) modifiedDeals
+GROUP BY 1,
+         2;
+</pre>
+
+# P.S.2
+<p>Есть еще вариант поработать с базой.
+<p>Есть в мускуле такие таблицы с типом MERGE
+<p>По сути это не таблица, а объединение таблиц с одинаковой структурой.
+<p>Например, можно создать таблицы deals_MMYYYY для каждого месяца. А таблица deals будет merge этих таблиц.
+<p>И при построении отчета можно тогда делать запрос не из deals, а из deals_MMYYYY. Это явно будет быстрее
