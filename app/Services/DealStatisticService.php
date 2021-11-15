@@ -32,14 +32,13 @@ class DealStatisticService
 
     /**
      * @param Deal $deal
-     * @param int $statusId = null
      *
      * @return void
      */
-    public function removeDeal(Deal $deal, int $statusId = null)
+    public function removeDeal(Deal $deal)
     {
         \DB::table($this->table)
-            ->where('hash', $this->getHash($deal, $statusId))
+            ->where('hash', $this->getHash($deal, $deal->getOriginal('status_id')))
             ->update([
                 'deals' => DB::raw('deals - 1')
             ]);
