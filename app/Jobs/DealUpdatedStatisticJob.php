@@ -35,7 +35,7 @@ class DealUpdatedStatisticJob implements ShouldQueue
     public function handle()
     {
         $dealStatisticService = new DealStatisticService;
-        $dealStatisticService->removeDeal($this->deal, $this->deal->getOriginal('status_id'));
+        $dealStatisticService->removeDeal($this->deal);
         $dealStatisticService->addDeal($this->deal);
     }
 }
